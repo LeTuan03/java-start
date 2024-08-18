@@ -59,7 +59,7 @@ public class ChapterServiceImpl implements ChapterService {
         Chapter chapter = chapterRepo.findById(req.getId()).orElse(null);
 
         if (Objects.isNull(chapter)){
-            throw new Exception("not fount!");
+            throw new Exception("not found!");
         }
 
         return chapter;
@@ -85,9 +85,7 @@ public class ChapterServiceImpl implements ChapterService {
             if(isExits.isPresent()){
                 Chapter updateChapter = isExits.get();
 
-                updateChapter.setTitle(chapter.getTitle());
-                updateChapter.setChapterNumber(chapter.getChapterNumber());
-                updateChapter.setComicId(chapter.getComicId());
+                this.setValueChapter(updateChapter, chapter);
 
                 List<Page> pages = this.handlePageDtos(updateChapter, chapter.getPages());
 

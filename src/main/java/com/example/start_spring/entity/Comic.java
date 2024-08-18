@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -29,8 +28,11 @@ public class Comic {
     @Column(name = "description")
     String description;
 
-    @Column(name = "author")
+        @Column(name = "author")
     String author;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "author_id", nullable = false)
+//    Author author;
 
     @Column(name = "coverImage")
     String coverImage;

@@ -17,4 +17,9 @@ public class Genres {
     String id;
     @Column(name = "nameType")
     String nameType;
+
+    public Genres(Genres entity) {
+        this.id = entity.getId();
+        this.nameType = entity.getNameType();
+    }
 }

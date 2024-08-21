@@ -42,7 +42,9 @@ public class PageServiceImpl implements PageService {
     private void setValuePage(Page entity, PageDto request) {
         entity.setPageNumber(request.getPageNumber());
         entity.setImageUrl(request.getImageUrl());
-        entity.setChapterId(request.getChapterId());
+        if(!Objects.isNull(request.getChapterId())) {
+            entity.setChapterId(request.getChapterId());
+        }
     }
 
     Page getPageById(PageDto req) throws Exception {
@@ -60,19 +62,17 @@ public class PageServiceImpl implements PageService {
     }
 
     @Override
-    public ResponseEntity<Object> update(Page page) {
+    public ResponseEntity<Object> update(PageDto request, String id) {
         try {
-            Optional<Page> isExits = pageRepo.findById(page.getId());
+            Optional<Page> isExits = pageRepo.findById(id);
             if (isExits.isPresent()) {
-                Page updatePage = isExits.get();
+                Page entity = isExits.get();
 
-                updatePage.setPageNumber(page.getPageNumber());
-                updatePage.setImageUrl(page.getImageUrl());
-                updatePage.setChapterId(page.getChapterId());
+                this.setValuePage(entity, request);
 
-                pageRepo.save(updatePage);
+                pageRepo.save(entity);
 
-                return new ResponseEntity<>(updatePage, HttpStatus.OK);
+                return new ResponseEntity<>(entity, HttpStatus.OK);
             }
             return new ResponseEntity<>("Có lỗi xảy ra", HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {

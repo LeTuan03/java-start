@@ -4,5 +4,6 @@ public enum RoleEnum {
     ADMIN,
     USER,
     AUTHOR,
-    OTHER
+    OTHER,
+    GROUP_CREATOR
 }

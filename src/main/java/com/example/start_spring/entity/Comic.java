@@ -28,17 +28,15 @@ public class Comic {
     @Column(name = "description")
     String description;
 
-        @Column(name = "author")
-    String author;
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "author_id", nullable = false)
-//    Author author;
-
     @Column(name = "coverImage")
     String coverImage;
 
     @Column(name = "createdAt")
     LocalDate createdAt = LocalDate.now();
+
+    @ManyToOne
+    @JoinColumn(name = "authorId")
+    Author author;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(

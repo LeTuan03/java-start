@@ -1,5 +1,6 @@
 package com.example.start_spring.controller;
 
+import com.example.start_spring.DTO.ComicDto;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
 import com.example.start_spring.services.ComicService;
@@ -24,13 +25,13 @@ public class ComicController {
     }
 
     @PostMapping
-    ResponseEntity<Object> create(@RequestBody Comic comic) {
+    ResponseEntity<Object> create(@RequestBody ComicDto comic) {
         return comicService.create(comic);
     }
 
-    @PutMapping()
-    ResponseEntity<Object> update(@RequestBody Comic comic) {
-        return comicService.update(comic);
+    @PutMapping("/{id}")
+    ResponseEntity<Object> update(@RequestBody ComicDto comic, @PathVariable String id) {
+        return comicService.update(comic, id);
     }
 
     @GetMapping("/{id}")

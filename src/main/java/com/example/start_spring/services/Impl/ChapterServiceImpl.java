@@ -7,6 +7,7 @@ import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Page;
 import com.example.start_spring.repository.ChapterRepo;
 import com.example.start_spring.repository.ComicRepo;
+import com.example.start_spring.repository.PageRepo;
 import com.example.start_spring.services.ChapterService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class ChapterServiceImpl implements ChapterService {
     ChapterRepo chapterRepo;
     ComicRepo comicRepo;
 
+    PageRepo pageRepo;
+
     @Override
     public List<Chapter> getAll() {
         return chapterRepo.findAll();
@@ -35,16 +38,52 @@ public class ChapterServiceImpl implements ChapterService {
             Comic comic = comicRepo.findById(chapter.getComicId())
                     .orElseThrow(() -> new RuntimeException("Comic not found"));
 
+
             Chapter entity = this.getChapterById(chapter);
+
             this.setValueChapter(entity, chapter);
 
+            if (chapter.getPages() != null && !chapter.getPages().isEmpty()) {
+                List<Page> pageUpdate = this.updateMulti(chapter.getPages(), entity.getId());
+                if (pageUpdate != null && !pageUpdate.isEmpty()) {
+                    entity.setPages(new HashSet<>(pageUpdate));
+                }
+            }
+
             chapterRepo.save(entity);
+
             return new ResponseEntity<>(entity, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+
+    private List<Page> updateMulti(List<PageDto> request, String chapterId) {
+        try {
+            List<Page> pages = this.handlePageDto(request, chapterId);
+            pageRepo.saveAll(pages);
+            return pages;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    private List<Page> handlePageDto(List<PageDto> pageDtos, String chapterId) {
+        List<Page> pages = new ArrayList<>();
+
+        for (PageDto pageDto : pageDtos) {
+            Page page = new Page();
+            if (pageDto.getId() != null && !pageDto.getId().isEmpty()) {
+                page.setId(pageDto.getId());
+            }
+            page.setPageNumber(pageDto.getPageNumber());
+            page.setImageUrl(pageDto.getImageUrl());
+            page.setChapterId(chapterId);
+            pages.add(page);
+        }
+
+        return pages;
+    }
     private void setValueChapter(Chapter entity, ChapterRequest request){
         entity.setTitle(request.getTitle());
         entity.setChapterNumber(request.getChapterNumber());

@@ -28,9 +28,9 @@ public class PageController {
         return pageService.create(page);
     }
 
-    @PutMapping
-    ResponseEntity<Object> update(@RequestBody Page page) {
-        return pageService.update(page);
+    @PutMapping("/{id}")
+    ResponseEntity<Object> update(@RequestBody PageDto page, @PathVariable String id) {
+        return pageService.update(page, id);
     }
 
     @GetMapping("/{id}")

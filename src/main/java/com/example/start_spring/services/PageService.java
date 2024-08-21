@@ -11,7 +11,7 @@ public interface PageService {
 
     ResponseEntity<Object> create(PageDto page);
 
-    ResponseEntity<Object> update(Page page);
+    ResponseEntity<Object> update(PageDto page, String id);
 
     ResponseEntity<Object> getById(String id);
 

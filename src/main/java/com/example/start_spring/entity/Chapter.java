@@ -28,9 +28,8 @@ public class Chapter {
     @Column(name = "createdAt")
     LocalDateTime createdAt = LocalDateTime.now();
 
-    private String comicId;
+    String comicId;
 
     @OneToMany(mappedBy = "chapterId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Page> pages;
-
+    Set<Page> pages;
 }

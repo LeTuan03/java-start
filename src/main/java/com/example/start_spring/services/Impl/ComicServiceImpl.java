@@ -1,7 +1,10 @@
 package com.example.start_spring.services.Impl;
 
+import com.example.start_spring.DTO.ComicDto;
+import com.example.start_spring.entity.Author;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
+import com.example.start_spring.repository.AuthorRepo;
 import com.example.start_spring.repository.ComicRepo;
 import com.example.start_spring.repository.GenresRepo;
 import com.example.start_spring.services.ComicService;
@@ -13,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ public class ComicServiceImpl implements ComicService {
 
     ComicRepo comicRepo;
     GenresRepo genresRepo;
+    AuthorRepo authorRepo;
 
     @Override
     public List<Comic> getAll() {
@@ -32,20 +33,42 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public ResponseEntity<Object> create(Comic comic) {
+    public ResponseEntity<Object> create(ComicDto comic) {
         try {
+
+            Comic entity = new Comic();
+
+            this.setValueDtos(entity, comic);
+
             if (!CollectionUtils.isEmpty(comic.getGenres())) {
                 this.handleGenreDtos(comic);
             }
 
-            Comic comic1 = comicRepo.save(comic);
-            return new ResponseEntity<>(comic1, HttpStatus.OK);
+            comicRepo.save(entity);
+
+            return new ResponseEntity<>(entity, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    private void handleGenreDtos(Comic comic) {
+    void setValueDtos(Comic entity, ComicDto request) {
+        Optional<Author> selectAuthor = authorRepo.findById(request.getAuthor().getId());
+        entity.setTitle(request.getTitle());
+        entity.setDescription(request.getDescription());
+        entity.setCoverImage(request.getCoverImage());
+        if (!CollectionUtils.isEmpty(request.getGenres())) {
+            entity.setGenres(request.getGenres());
+        }
+        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
+            entity.setChapters(request.getChapters());
+        }
+        if (selectAuthor.isPresent()) {
+            entity.setAuthor(selectAuthor.get());
+        }
+    }
+
+    private void handleGenreDtos(ComicDto comic) {
         Set<Genres> genres = new HashSet<>();
 
         for (Genres genre : comic.getGenres()) {
@@ -57,39 +80,39 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public ResponseEntity<Object> update(Comic comic) {
+    public ResponseEntity<Object> update(ComicDto request, String id) {
         try {
-            Optional<Comic> isExits = comicRepo.findById(comic.getId());
+            Optional<Comic> isExits = comicRepo.findById(id);
             if (isExits.isPresent()) {
                 Comic updateComic = isExits.get();
 
-                updateComic.setTitle(comic.getTitle());
-                updateComic.setDescription(comic.getDescription());
-                updateComic.setCoverImage(comic.getCoverImage());
-                updateComic.setAuthor(comic.getAuthor());
+                this.setValueDtos(updateComic, request);
 
-                if (!CollectionUtils.isEmpty(comic.getGenres())) {
-                    this.handleGenreDtos(comic);
+                if (!CollectionUtils.isEmpty(request.getGenres())) {
+                    this.handleGenreDtos(request);
                 }
 
                 comicRepo.save(updateComic);
 
                 return new ResponseEntity<>(updateComic, HttpStatus.OK);
             }
-            return new ResponseEntity<>("Có lỗi xảy ra", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Comic không tồn tại", HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+
     @Override
     public ResponseEntity<Object> getById(String id) {
         try {
-            Optional<Comic> isExits = comicRepo.findById(id);
-            if (isExits.isPresent()) {
-                return new ResponseEntity<>(isExits, HttpStatus.OK);
+
+            Optional<Comic> comic = comicRepo.findById(id);
+            if (Objects.isNull(comic)) {
+                return new ResponseEntity<>("Comic không tồn tại", HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Có lỗi xảy ra", HttpStatus.BAD_REQUEST);
+
+            return new ResponseEntity<>(comic, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }

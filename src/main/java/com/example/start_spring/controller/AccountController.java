@@ -2,6 +2,7 @@ package com.example.start_spring.controller;
 
 import com.example.start_spring.DTO.AccountRequestDto;
 import com.example.start_spring.DTO.AccountResponseDto;
+import com.example.start_spring.DTO.AuthorDto;
 import com.example.start_spring.services.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,4 +43,10 @@ public class AccountController {
     ResponseEntity<Object> delete(@PathVariable String id) {
         return accountService.delete(id);
     }
+
+    @PutMapping("/{accountId}/register-author")
+    ResponseEntity<Object> registerAuthor(@PathVariable String accountId, @RequestBody AuthorDto authorDto) {
+        return accountService.registerAuthor(accountId, authorDto);
+    }
+
 }

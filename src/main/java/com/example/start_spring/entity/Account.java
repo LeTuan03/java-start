@@ -46,4 +46,15 @@ public class Account {
     @Column(name = "isActive")
     Boolean isActive = true;
 
+    @OneToOne
+    @JoinColumn(name = "authorId")
+    Author author;
+
+    @Column(name = "isAllowRegister")
+    Boolean isAllowRegister = true;
+
+    @PrePersist
+    protected void onCreate() {
+        this.isAllowRegister = true;
+    }
 }

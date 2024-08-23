@@ -1,6 +1,7 @@
 package com.example.start_spring.DTO;
 
 import com.example.start_spring.entity.Account;
+import com.example.start_spring.entity.Author;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,4 +18,6 @@ public class AccountRequestDto {
     String avatar;
     String role;
     Boolean isActive;
+    Author author;
+    Boolean isAllowRegister;
 }

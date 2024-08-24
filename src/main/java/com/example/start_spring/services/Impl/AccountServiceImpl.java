@@ -126,7 +126,7 @@ public class AccountServiceImpl implements AccountService {
         entity.setAddress(request.getAddress());
         entity.setName(request.getName());
         entity.setEmail(request.getEmail());
-        entity.setDateOfIssue(request.getDateOfIssue());
+//        entity.setDateOfIssue(request.getDateOfIssue());
         entity.setPhone(request.getPhone());
     }
     @Override

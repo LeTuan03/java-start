@@ -15,11 +15,11 @@ public class Genres {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     String id;
-    @Column(name = "nameType")
-    String nameType;
+    @Column(name = "name")
+    String name;
 
     public Genres(Genres entity) {
         this.id = entity.getId();
-        this.nameType = entity.getNameType();
+        this.name = entity.getName();
     }
 }

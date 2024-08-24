@@ -38,7 +38,7 @@ public class GenresServiceImpl implements GenresService {
             Optional<Genres> isExits = genresRepo.findById(genres.getId());
             if (isExits.isPresent()) {
                 Genres updateGenres = isExits.get();
-                updateGenres.setNameType(genres.getNameType());
+                updateGenres.setName(genres.getName());
                 genresRepo.save(updateGenres);
                 return new ResponseEntity<>(updateGenres, HttpStatus.OK);
             }

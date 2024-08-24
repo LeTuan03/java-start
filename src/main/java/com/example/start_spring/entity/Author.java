@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -35,11 +36,11 @@ public class Author {
     String email;
 
     @Column(name = "type")
-    String type; //theo to chuc hoac tu do
+    Integer type; //theo to chuc hoac tu do
 
     @Column(name = "status")
-    String status;
+    Integer status;
 
     @Column(name = "dateOfIssue")
-    LocalDate dateOfIssue;//ngay phat hanh
+    LocalDateTime dateOfIssue;//ngay phat hanh
 }

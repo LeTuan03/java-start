@@ -26,7 +26,7 @@ public class Chapter {
     Integer chapterNumber;
 
     @Column(name = "createdAt")
-    LocalDateTime createdAt = LocalDateTime.now();
+    LocalDateTime createdAt;
 
     String comicId;
 

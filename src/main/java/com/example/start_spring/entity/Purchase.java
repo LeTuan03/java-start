@@ -55,22 +55,4 @@ public class Purchase {
 
     @Column(name = "note")
     String note;
-
-    @PrePersist
-    void generateId() {
-        if (this.purchaseNumber == null) {
-            this.purchaseNumber = generateUniqueId();
-        }
-    }
-
-    String generateUniqueId() {
-        String prefix = "PUR-";
-        int nextId = getNextIdFromDatabase();
-        return prefix + String.format("%06d", nextId);
-    }
-
-    int getNextIdFromDatabase() {
-        return 1;
-    }
-
 }

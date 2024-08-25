@@ -43,6 +43,8 @@ public class ChapterServiceImpl implements ChapterService {
 
             this.setValueChapter(entity, chapter);
 
+            chapterRepo.save(entity);
+
             if (chapter.getPages() != null && !chapter.getPages().isEmpty()) {
                 List<Page> pageUpdate = this.updateMulti(chapter.getPages(), entity.getId());
                 if (pageUpdate != null && !pageUpdate.isEmpty()) {
@@ -106,14 +108,39 @@ public class ChapterServiceImpl implements ChapterService {
 
     private List<Page> handlePageDtos(Chapter chapter, List<PageDto> pageDtos) {
         List<Page> pages = new ArrayList<>();
+
         for (PageDto pageDto : pageDtos) {
-            Page page = new Page();
-            page.setId(pageDto.getId());
-            page.setPageNumber(pageDto.getPageNumber());
-            page.setImageUrl(pageDto.getImageUrl());
-            page.setChapterId(chapter.getId());
+            Page page;
+
+            // Kiểm tra xem trang có tồn tại trong database hay không dựa vào ID
+            if (pageDto.getId() != null) {
+                Optional<Page> existingPage = pageRepo.findById(pageDto.getId());
+                if (existingPage.isPresent()) {
+                    page = existingPage.get();
+                    // Cập nhật các thuộc tính
+                    page.setPageNumber(pageDto.getPageNumber());
+                    page.setImageUrl(pageDto.getImageUrl());
+                    page.setChapterId(chapter.getId());
+                } else {
+                    // Nếu ID không tồn tại, tạo mới
+                    page = new Page();
+                    page.setId(pageDto.getId());
+                    page.setPageNumber(pageDto.getPageNumber());
+                    page.setImageUrl(pageDto.getImageUrl());
+                    page.setChapterId(chapter.getId());
+                }
+            } else {
+                // Nếu ID là null, tạo mới
+                page = new Page();
+                page.setPageNumber(pageDto.getPageNumber());
+                page.setImageUrl(pageDto.getImageUrl());
+                page.setChapterId(chapter.getId());
+            }
+
+            // Thêm page vào danh sách
             pages.add(page);
         }
+
         return pages;
     }
 
@@ -128,7 +155,14 @@ public class ChapterServiceImpl implements ChapterService {
 
                 List<Page> pages = this.handlePageDtos(updateChapter, chapter.getPages());
 
-                updateChapter.setPages((Set<Page>) pages);
+                pageRepo.saveAll(pages);
+
+                // Xóa các phần tử cũ
+                updateChapter.getPages().clear();
+
+                // Thêm các trang mới
+                updateChapter.getPages().addAll(pages);
+
 
                 chapterRepo.save(updateChapter);
 

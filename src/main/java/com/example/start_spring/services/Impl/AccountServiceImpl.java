@@ -52,12 +52,21 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    boolean checkExistAuthor(Author author) {
+        return  accountRepo.existsByAuthor(author);
+    };
+
     @Override
     public ResponseEntity<Object> create(AccountRequestDto request) {
         try {
-            Optional<Account> isExitEmail = accountRepo.findByEmail(request.getEmail());
-            if (isExitEmail.isPresent()) {
+            boolean isExistEmail = accountRepo.existsByEmail(request.getEmail());
+
+
+            if (isExistEmail) {
                 return new ResponseEntity<>("Email đã tồn tại", HttpStatus.BAD_REQUEST);
+            }
+            if(checkExistAuthor(request.getAuthor())) {
+                return new ResponseEntity<>("Tác giả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             Account entity = new Account();
             this.setValueAccount(entity, request);
@@ -73,7 +82,18 @@ public class AccountServiceImpl implements AccountService {
     public ResponseEntity<Object> update(String id, AccountRequestDto request) {
         try {
             Optional<Account> isExits = accountRepo.findById(id);
+            boolean isExistEmail = accountRepo.existsByEmail(request.getEmail());
 
+            boolean isExitsEmailUpdate = isExistEmail && !isExits.get().getEmail().equals(request.getEmail());
+            boolean isExitsAuthorUpdate = checkExistAuthor(request.getAuthor()) && !isExits.get().getAuthor().equals(request.getAuthor());
+
+            if (isExitsEmailUpdate) {
+                return new ResponseEntity<>("Email đã tồn tại", HttpStatus.BAD_REQUEST);
+            }
+
+            if(isExitsAuthorUpdate) {
+                return new ResponseEntity<>("Tác giả không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
             if (isExits.isPresent()) {
                 Account entity = isExits.get();
 

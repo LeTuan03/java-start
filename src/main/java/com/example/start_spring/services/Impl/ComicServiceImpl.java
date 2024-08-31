@@ -60,9 +60,9 @@ public class ComicServiceImpl implements ComicService {
         if (!CollectionUtils.isEmpty(request.getGenres())) {
             entity.setGenres(request.getGenres());
         }
-        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
-            entity.setChapters(request.getChapters());
-        }
+//        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
+//            entity.setChapters(request.getChapters());
+//        }
         if (selectAuthor.isPresent()) {
             entity.setAuthor(selectAuthor.get());
         }
@@ -78,6 +78,7 @@ public class ComicServiceImpl implements ComicService {
 
         comic.setGenres(genres);
     }
+
 
     @Override
     public ResponseEntity<Object> update(ComicDto request, String id) {
@@ -101,7 +102,6 @@ public class ComicServiceImpl implements ComicService {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @Override
     public ResponseEntity<Object> getById(String id) {

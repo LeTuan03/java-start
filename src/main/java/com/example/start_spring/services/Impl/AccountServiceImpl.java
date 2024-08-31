@@ -44,6 +44,7 @@ public class AccountServiceImpl implements AccountService {
         entity.setRole(accountRequestDto.getRole());
         entity.setIsActive(accountRequestDto.getIsActive());
         entity.setPassword(accountRequestDto.getPassword());
+        entity.setFullName(accountRequestDto.getFullName());
         entity.setIsAllowRegister(accountRequestDto.getIsAllowRegister());
 
         if(!Objects.isNull(accountRequestDto.getAuthor())) {

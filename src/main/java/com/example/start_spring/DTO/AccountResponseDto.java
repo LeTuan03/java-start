@@ -20,6 +20,7 @@ public class AccountResponseDto {
     Boolean isActive;
     Author author;
 
+    String fullName;
     Boolean isAllowRegister;
 
     public AccountResponseDto(Account account) {
@@ -32,5 +33,6 @@ public class AccountResponseDto {
         this.isActive = account.getIsActive();
         this.author = account.getAuthor();
         this.isAllowRegister = account.getIsAllowRegister();
+        this.fullName = account.getFullName();
     }
 }

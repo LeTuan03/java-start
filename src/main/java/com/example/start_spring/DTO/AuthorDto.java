@@ -16,6 +16,7 @@ public class AuthorDto {
     String phone;
     String address;
     String email;
+    String fullName;
     Integer type; //theo to chuc hoac tu do
     Integer status;
     LocalDateTime dateOfIssue;//ngay phat hanh

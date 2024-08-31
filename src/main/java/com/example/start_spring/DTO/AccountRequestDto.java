@@ -20,4 +20,5 @@ public class AccountRequestDto {
     Boolean isActive;
     Author author;
     Boolean isAllowRegister;
+    String fullName;
 }

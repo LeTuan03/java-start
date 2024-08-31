@@ -37,6 +37,9 @@ public class Account {
     @Column(name = "avatar")
     String avatar;
 
+    @Column(name = "fullName")
+    String fullName;
+
     @Column(name = "createdAt")
     LocalDateTime createdAt = LocalDateTime.now();
 

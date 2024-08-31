@@ -51,7 +51,7 @@ public class Purchase {
     String purchaseNumber;
 
     @Column(name = "status")
-    String status;
+    Integer status;
 
     @Column(name = "note")
     String note;

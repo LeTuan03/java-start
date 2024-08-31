@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -46,5 +48,15 @@ public class PageController {
     @PutMapping("/multi/{chapterId}")
     ResponseEntity<Object> updateMulti(@PathVariable String chapterId, @RequestBody List<PageDto> pages) {
         return pageService.updateMulti(pages, chapterId);
+    }
+
+    @PutMapping("/image")
+    ResponseEntity<Object> updateImage(@RequestParam("id") String id, @RequestParam("imageUrl")MultipartFile imageUrl) throws IOException {
+        return pageService.updateImage(id, imageUrl);
+    }
+
+    @PostMapping("/image-create")
+    ResponseEntity<Object> createImage(@RequestParam("imageUrl") MultipartFile imageUrl) throws IOException {
+        return pageService.createImage(imageUrl);
     }
 }

@@ -22,6 +22,6 @@ public class PurchaseDto {
     Integer quantity;
     LocalDateTime purchaseDate;
     String purchaseNumber;
-    String status;
+    Integer status;
     String note;
 }

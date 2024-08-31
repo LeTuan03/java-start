@@ -10,7 +10,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,8 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PageServiceImpl implements PageService {
     PageRepo pageRepo;
+
+    CloudinaryServiceImpl cloudinaryService;
 
     @Override
     public List<Page> getAll() {
@@ -130,5 +134,29 @@ public class PageServiceImpl implements PageService {
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Override
+    public ResponseEntity<Object> updateImage(String id, MultipartFile imageUrl) throws IOException {
+        Optional<Page> isExits = pageRepo.findById(id);
+
+        if(isExits.isPresent()) {
+            Page entity = isExits.get();
+            entity.setImageUrl(cloudinaryService.uploadImage(imageUrl));
+
+            pageRepo.save(entity);
+
+            return new ResponseEntity<>(entity, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Object> createImage(MultipartFile imageUrl) throws IOException {
+        if(imageUrl != null) {
+            return new ResponseEntity<>(cloudinaryService.uploadImage(imageUrl), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Server error", HttpStatus.BAD_REQUEST);
     }
 }

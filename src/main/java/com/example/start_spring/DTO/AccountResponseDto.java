@@ -19,7 +19,6 @@ public class AccountResponseDto {
     String role;
     Boolean isActive;
     Author author;
-
     String fullName;
     Boolean isAllowRegister;
 

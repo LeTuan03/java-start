@@ -2,9 +2,13 @@ package com.example.start_spring.services.Impl;
 
 import com.example.start_spring.DTO.AccountRequestDto;
 import com.example.start_spring.DTO.AccountResponseDto;
+import com.example.start_spring.DTO.ApiResponse;
 import com.example.start_spring.DTO.AuthorDto;
 import com.example.start_spring.entity.Account;
 import com.example.start_spring.entity.Author;
+import com.example.start_spring.enums.CodeEnum;
+import com.example.start_spring.exception.AppException;
+import com.example.start_spring.exception.ErrorCode;
 import com.example.start_spring.repository.AccountRepo;
 import com.example.start_spring.repository.AuthorRepo;
 import com.example.start_spring.services.AccountService;
@@ -36,41 +40,43 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
     }
 
-    void setValueAccount(Account entity, AccountRequestDto accountRequestDto) {
+    void setValueAccount(Account entity, AccountRequestDto accountRequestDto, boolean isUpdate) {
         entity.setAvatar(accountRequestDto.getAvatar());
         entity.setUsername(accountRequestDto.getUsername());
         entity.setEmail(accountRequestDto.getEmail());
         entity.setPhone(accountRequestDto.getPhone());
         entity.setRole(accountRequestDto.getRole());
         entity.setIsActive(accountRequestDto.getIsActive());
-        entity.setPassword(accountRequestDto.getPassword());
+        entity.setPassword(isUpdate ? entity.getPassword() : accountRequestDto.getPassword());
         entity.setFullName(accountRequestDto.getFullName());
         entity.setIsAllowRegister(accountRequestDto.getIsAllowRegister());
 
-        if(!Objects.isNull(accountRequestDto.getAuthor())) {
+        if (!Objects.isNull(accountRequestDto.getAuthor())) {
             entity.setAuthor(accountRequestDto.getAuthor());
         }
 
     }
 
     boolean checkExistAuthor(Author author) {
-        return  accountRepo.existsByAuthor(author);
-    };
+        return accountRepo.existsByAuthor(author);
+    }
+
+    ;
 
     @Override
     public ResponseEntity<Object> create(AccountRequestDto request) {
         try {
-            boolean isExistEmail = accountRepo.existsByEmail(request.getEmail());
+            boolean validateEmailAndUsername = accountRepo.existsByEmailOrUsername(request.getEmail(), request.getUsername());
 
 
-            if (isExistEmail) {
-                return new ResponseEntity<>("Email đã tồn tại", HttpStatus.BAD_REQUEST);
+            if (validateEmailAndUsername) {
+                throw new AppException(ErrorCode.EXITS_EMAIL_USERNAME);
             }
-            if(checkExistAuthor(request.getAuthor())) {
+            if (checkExistAuthor(request.getAuthor())) {
                 return new ResponseEntity<>("Tác giả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             Account entity = new Account();
-            this.setValueAccount(entity, request);
+            this.setValueAccount(entity, request, false);
             entity.setIsAllowRegister(true);
             accountRepo.save(entity);
             return new ResponseEntity<>(entity, HttpStatus.OK);
@@ -92,19 +98,19 @@ public class AccountServiceImpl implements AccountService {
                 return new ResponseEntity<>("Email đã tồn tại", HttpStatus.BAD_REQUEST);
             }
 
-            if(isExitsAuthorUpdate) {
+            if (isExitsAuthorUpdate) {
                 return new ResponseEntity<>("Tác giả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             if (isExits.isPresent()) {
                 Account entity = isExits.get();
 
-                if(Boolean.valueOf(entity.getIsAllowRegister())) {
+                if (Boolean.valueOf(entity.getIsAllowRegister())) {
                     request.setIsAllowRegister(true);
                 } else {
                     request.setIsAllowRegister(false);
                 }
 
-                this.setValueAccount(entity, request);
+                this.setValueAccount(entity, request, true);
 
 
                 accountRepo.save(entity);
@@ -150,6 +156,7 @@ public class AccountServiceImpl implements AccountService {
 //        entity.setDateOfIssue(request.getDateOfIssue());
         entity.setPhone(request.getPhone());
     }
+
     @Override
     public ResponseEntity<Object> registerAuthor(String accountId, AuthorDto request) {
         try {
@@ -157,7 +164,7 @@ public class AccountServiceImpl implements AccountService {
 
             if (isExits.isPresent()) {
                 Account entity = isExits.get();
-                if(Boolean.FALSE.equals(entity.getIsAllowRegister())) {
+                if (Boolean.FALSE.equals(entity.getIsAllowRegister())) {
                     return new ResponseEntity<>("Bạn không có quyền", HttpStatus.BAD_REQUEST);
                 }
                 Author author = new Author();
@@ -178,5 +185,52 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    private boolean checkExistByEmailAndUsername(String email, String username) {
+        boolean isExistEmail = accountRepo.existsByEmail(email);
+        boolean isExistUsername = accountRepo.existsByUsername(username);
 
+        return isExistEmail || isExistUsername;
+    }
+
+    @Override
+    public AccountResponseDto register(AccountRequestDto request) {
+        boolean validateEmailAndUsername = accountRepo.existsByEmailOrUsername(request.getEmail(), request.getUsername());
+        if (validateEmailAndUsername) {
+            throw new AppException(ErrorCode.EXITS_EMAIL_USERNAME);
+        }
+        Account entity = new Account();
+
+        this.setValueAccount(entity, request, true);
+        entity.setIsAllowRegister(true);
+
+        return this.convertToResponseDto(accountRepo.save(entity));
+    }
+
+    @Override
+    public ApiResponse<AccountResponseDto> login(String username, String password) {
+        Optional<Account> account = accountRepo.findByUsernameAndPassword(username, password);
+        ApiResponse<AccountResponseDto> apiResponse = new ApiResponse();
+        if(account.isPresent()) {
+            apiResponse.setCode(CodeEnum.RESPONSE_OK.getCode());
+            apiResponse.setMessage(CodeEnum.RESPONSE_OK.getMessage());
+            AccountResponseDto response = this.convertToResponseDto(account.get());
+            apiResponse.setData(response);
+            return apiResponse;
+        }
+        apiResponse.setCode(ErrorCode.INVALID_ACCOUNT.getCode());
+        apiResponse.setMessage(ErrorCode.INVALID_ACCOUNT.getMessage());
+        return apiResponse;
+    }
+
+    private AccountResponseDto convertToResponseDto(Account account) {
+        AccountResponseDto response = new AccountResponseDto();
+        response.setId(account.getId());
+        response.setUsername(account.getUsername());
+        response.setEmail(account.getEmail());
+        response.setRole(account.getRole());
+        response.setIsActive(true);
+        response.setFullName(account.getFullName());
+        response.setIsAllowRegister(account.getIsAllowRegister());
+        return response;
+    }
 }

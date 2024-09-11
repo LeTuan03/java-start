@@ -47,4 +47,9 @@ public class ComicController {
 
     @GetMapping("/list-by-user")
     List<ComicListByUser> getAllByUser() {return comicService.getAllByUser();};
+
+    @PostMapping("/like/{id}")
+    ResponseEntity<Object> like(@PathVariable String id) {
+        return comicService.like(id);
+    }
 }

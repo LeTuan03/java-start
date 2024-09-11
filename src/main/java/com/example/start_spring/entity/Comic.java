@@ -34,6 +34,9 @@ public class Comic {
     @Column(name = "createdAt")
     LocalDate createdAt = LocalDate.now();
 
+    @Column(name = "likeCount")
+    Integer likeCount;
+
     @ManyToOne
     @JoinColumn(name = "authorId")
     Author author;

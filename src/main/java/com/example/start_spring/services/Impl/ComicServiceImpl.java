@@ -137,4 +137,18 @@ public class ComicServiceImpl implements ComicService {
                 .map(comic -> new ComicListByUser(comic.getId(), comic.getTitle(), comic.getCoverImage()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ResponseEntity<Object> like(String id) {
+        Optional<Comic> isExits = comicRepo.findById(id);
+        if(Objects.isNull(isExits)) {
+            return new ResponseEntity<>("Không tìm thấy", HttpStatus.NOT_FOUND);
+        }
+        Comic entity = isExits.get();
+
+        entity.setLikeCount(entity.getLikeCount() + 1);
+        comicRepo.save(entity);
+
+        return new ResponseEntity<>("Thành công", HttpStatus.OK);
+    }
 }

@@ -20,4 +20,6 @@ public interface ComicService {
     ResponseEntity<Object> delete(String id);
 
     List<ComicListByUser> getAllByUser();
+
+    ResponseEntity<Object> like(String id);
 }

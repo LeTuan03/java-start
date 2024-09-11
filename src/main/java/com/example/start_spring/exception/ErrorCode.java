@@ -5,7 +5,8 @@ public enum ErrorCode {
     SERVER_ERROR(505,"Lỗi hệ thống"),
     INVALID_ACCOUNT(402, "Tên tài khoản hoặc mật khẩu không đúng"),
     OLD_PASS_NOT_MATCH(503, "Mật khẩu không khớp"),
-    NOT_FOUND(504, "Không tìm thấy")
+    NOT_FOUND(504, "Không tìm thấy"),
+    EXITS_COMIC_FAV(505, "Truyện đã được thêm vào danh sách ưa thich")
     ;
     ErrorCode(int code, String message) {
         this.code = code;

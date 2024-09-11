@@ -1,9 +1,6 @@
 package com.example.start_spring.controller;
 
-import com.example.start_spring.DTO.AccountRequestDto;
-import com.example.start_spring.DTO.AccountResponseDto;
-import com.example.start_spring.DTO.ApiResponse;
-import com.example.start_spring.DTO.AuthorDto;
+import com.example.start_spring.DTO.*;
 import com.example.start_spring.enums.CodeEnum;
 import com.example.start_spring.services.AccountService;
 import lombok.AccessLevel;
@@ -64,5 +61,10 @@ public class AccountController {
     @PostMapping("/login")
     ApiResponse<AccountResponseDto> login(@RequestParam String username, @RequestParam String password) {
         return accountService.login(username, password);
+    }
+
+    @PostMapping("/change-password")
+    ApiResponse<AccountResponseDto> changePassword(@RequestBody ChangePasswordDto request) {
+        return accountService.changePassword(request);
     }
 }

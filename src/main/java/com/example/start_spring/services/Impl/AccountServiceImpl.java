@@ -1,9 +1,6 @@
 package com.example.start_spring.services.Impl;
 
-import com.example.start_spring.DTO.AccountRequestDto;
-import com.example.start_spring.DTO.AccountResponseDto;
-import com.example.start_spring.DTO.ApiResponse;
-import com.example.start_spring.DTO.AuthorDto;
+import com.example.start_spring.DTO.*;
 import com.example.start_spring.entity.Account;
 import com.example.start_spring.entity.Author;
 import com.example.start_spring.enums.CodeEnum;
@@ -53,6 +50,8 @@ public class AccountServiceImpl implements AccountService {
 
         if (!Objects.isNull(accountRequestDto.getAuthor())) {
             entity.setAuthor(accountRequestDto.getAuthor());
+        } else {
+            entity.setAuthor(null);
         }
 
     }
@@ -220,6 +219,25 @@ public class AccountServiceImpl implements AccountService {
         apiResponse.setCode(ErrorCode.INVALID_ACCOUNT.getCode());
         apiResponse.setMessage(ErrorCode.INVALID_ACCOUNT.getMessage());
         return apiResponse;
+    }
+
+    @Override
+    public ApiResponse<AccountResponseDto> changePassword(ChangePasswordDto request) {
+        Optional<Account> accountExist = accountRepo.findByEmail(request.getEmail());
+
+        if(accountExist.isPresent()) {
+            Account entity = accountExist.get();
+            if(entity.getPassword() != request.getOldPass()) {
+                throw new AppException(ErrorCode.OLD_PASS_NOT_MATCH);
+            }
+            entity.setPassword(request.getNewPass());
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.setCode(CodeEnum.RESPONSE_OK.getCode());
+            apiResponse.setMessage(CodeEnum.RESPONSE_OK.getMessage());
+            apiResponse.setData(accountRepo.save(entity));
+            return apiResponse;
+        }
+        throw new AppException(ErrorCode.NOT_FOUND);
     }
 
     private AccountResponseDto convertToResponseDto(Account account) {

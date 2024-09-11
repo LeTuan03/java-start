@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -70,6 +72,7 @@ public class ChapterServiceImpl implements ChapterService {
             return null;
         }
     }
+
     private List<Page> handlePageDto(List<PageDto> pageDtos, String chapterId) {
         List<Page> pages = new ArrayList<>();
 
@@ -86,20 +89,27 @@ public class ChapterServiceImpl implements ChapterService {
 
         return pages;
     }
-    private void setValueChapter(Chapter entity, ChapterRequest request){
+
+    private void setValueChapter(Chapter entity, ChapterRequest request) {
         entity.setTitle(request.getTitle());
         entity.setChapterNumber(request.getChapterNumber());
         entity.setComicId(request.getComicId());
+
+        Date date = new Date();
+        LocalDateTime localDateTime = date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        entity.setCreatedAt(localDateTime);
     }
 
     Chapter getChapterById(ChapterRequest req) throws Exception {
-        if (Objects.isNull(req.getId())){
+        if (Objects.isNull(req.getId())) {
             return new Chapter();
         }
 
         Chapter chapter = chapterRepo.findById(req.getId()).orElse(null);
 
-        if (Objects.isNull(chapter)){
+        if (Objects.isNull(chapter)) {
             throw new Exception("not found!");
         }
 
@@ -148,7 +158,7 @@ public class ChapterServiceImpl implements ChapterService {
     public ResponseEntity<Object> update(ChapterRequest chapter) {
         try {
             Optional<Chapter> isExits = chapterRepo.findById(chapter.getId());
-            if(isExits.isPresent()){
+            if (isExits.isPresent()) {
                 Chapter updateChapter = isExits.get();
 
                 this.setValueChapter(updateChapter, chapter);
@@ -169,7 +179,7 @@ public class ChapterServiceImpl implements ChapterService {
                 return new ResponseEntity<>(updateChapter, HttpStatus.OK);
             }
             return new ResponseEntity<>("Có lỗi xảy ra", HttpStatus.BAD_REQUEST);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -182,7 +192,7 @@ public class ChapterServiceImpl implements ChapterService {
                 return new ResponseEntity<>(isExits, HttpStatus.OK);
             }
             return new ResponseEntity<>("Có lỗi xảy ra", HttpStatus.BAD_REQUEST);
-        } catch ( Exception ex) {
+        } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

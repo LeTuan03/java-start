@@ -1,9 +1,6 @@
 package com.example.start_spring.services;
 
-import com.example.start_spring.DTO.AccountRequestDto;
-import com.example.start_spring.DTO.AccountResponseDto;
-import com.example.start_spring.DTO.ApiResponse;
-import com.example.start_spring.DTO.AuthorDto;
+import com.example.start_spring.DTO.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -24,5 +21,7 @@ public interface AccountService {
     AccountResponseDto register(AccountRequestDto request);
 
     ApiResponse<AccountResponseDto> login(String username, String password);
+
+    ApiResponse<AccountResponseDto> changePassword(ChangePasswordDto request);
 
 }

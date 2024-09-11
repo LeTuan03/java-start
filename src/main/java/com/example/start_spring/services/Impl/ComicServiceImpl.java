@@ -1,6 +1,7 @@
 package com.example.start_spring.services.Impl;
 
 import com.example.start_spring.DTO.ComicDto;
+import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.entity.Author;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -127,5 +129,12 @@ public class ComicServiceImpl implements ComicService {
             return new ResponseEntity<>("Xóa thành công", HttpStatus.OK);
         }
         throw new RuntimeException("Không tìm thấy");
+    }
+
+    @Override
+    public List<ComicListByUser> getAllByUser() {
+        return comicRepo.findAll().stream()
+                .map(comic -> new ComicListByUser(comic.getId(), comic.getTitle(), comic.getCoverImage()))
+                .collect(Collectors.toList());
     }
 }

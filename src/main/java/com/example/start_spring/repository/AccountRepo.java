@@ -17,5 +17,6 @@ public interface AccountRepo extends JpaRepository<Account, String> {
 
     Optional<Account> findByUsernameAndPassword(String username, String password);
 
+    Optional<Account> findByEmail(String email);
     boolean existsByAuthor(Author author);
 }

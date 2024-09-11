@@ -1,6 +1,7 @@
 package com.example.start_spring.controller;
 
 import com.example.start_spring.DTO.ComicDto;
+import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
 import com.example.start_spring.services.ComicService;
@@ -43,4 +44,7 @@ public class ComicController {
     ResponseEntity<Object> deleteById(@PathVariable String id) {
         return comicService.delete(id);
     }
+
+    @GetMapping("/list-by-user")
+    List<ComicListByUser> getAllByUser() {return comicService.getAllByUser();};
 }

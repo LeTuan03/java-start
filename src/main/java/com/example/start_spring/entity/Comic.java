@@ -37,6 +37,12 @@ public class Comic {
     @Column(name = "likeCount")
     Integer likeCount;
 
+    @Column(name = "viewCount")
+    Integer viewCount = 0;
+
+    @Column(name = "status")
+    Integer status;
+
     @ManyToOne
     @JoinColumn(name = "authorId")
     Author author;
@@ -50,6 +56,7 @@ public class Comic {
     Set<Genres> genres;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comicId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("chapterNumber DESC")
     Set<Chapter> chapters;
 
 }

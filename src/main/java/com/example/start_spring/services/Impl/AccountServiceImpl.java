@@ -60,8 +60,6 @@ public class AccountServiceImpl implements AccountService {
         return accountRepo.existsByAuthor(author);
     }
 
-    ;
-
     @Override
     public ResponseEntity<Object> create(AccountRequestDto request) {
         try {
@@ -71,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
             if (validateEmailAndUsername) {
                 throw new AppException(ErrorCode.EXITS_EMAIL_USERNAME);
             }
-            if (checkExistAuthor(request.getAuthor())) {
+            if (Objects.nonNull(request.getAuthor()) && checkExistAuthor(request.getAuthor())) {
                 return new ResponseEntity<>("Tác giả không hợp lệ", HttpStatus.BAD_REQUEST);
             }
             Account entity = new Account();
@@ -91,7 +89,8 @@ public class AccountServiceImpl implements AccountService {
             boolean isExistEmail = accountRepo.existsByEmail(request.getEmail());
 
             boolean isExitsEmailUpdate = isExistEmail && !isExits.get().getEmail().equals(request.getEmail());
-            boolean isExitsAuthorUpdate = checkExistAuthor(request.getAuthor()) && !isExits.get().getAuthor().equals(request.getAuthor());
+            boolean isExitsAuthorUpdate = checkExistAuthor(request.getAuthor())
+                    && !Objects.equals(isExits.get().getAuthor(), request.getAuthor());
 
             if (isExitsEmailUpdate) {
                 return new ResponseEntity<>("Email đã tồn tại", HttpStatus.BAD_REQUEST);
@@ -199,7 +198,7 @@ public class AccountServiceImpl implements AccountService {
         }
         Account entity = new Account();
 
-        this.setValueAccount(entity, request, true);
+        this.setValueAccount(entity, request, false);
         entity.setIsAllowRegister(true);
 
         return this.convertToResponseDto(accountRepo.save(entity));
@@ -227,7 +226,7 @@ public class AccountServiceImpl implements AccountService {
 
         if(accountExist.isPresent()) {
             Account entity = accountExist.get();
-            if(entity.getPassword() != request.getOldPass()) {
+            if(!entity.getPassword().equals(request.getOldPass())) {
                 throw new AppException(ErrorCode.OLD_PASS_NOT_MATCH);
             }
             entity.setPassword(request.getNewPass());

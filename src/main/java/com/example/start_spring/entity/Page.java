@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -26,4 +28,7 @@ public class Page {
     String imageUrl;
 
     String chapterId;
+
+    @Column(name = "createdAt")
+    LocalDateTime createdAt = LocalDateTime.now();
 }

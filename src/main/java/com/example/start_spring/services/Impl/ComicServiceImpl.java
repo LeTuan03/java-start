@@ -2,11 +2,13 @@ package com.example.start_spring.services.Impl;
 
 import com.example.start_spring.DTO.ComicDto;
 import com.example.start_spring.DTO.ComicListByUser;
+import com.example.start_spring.DTO.GetComicDto;
 import com.example.start_spring.entity.Author;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
 import com.example.start_spring.repository.AuthorRepo;
 import com.example.start_spring.repository.ComicRepo;
+import com.example.start_spring.repository.FavoritesRepo;
 import com.example.start_spring.repository.GenresRepo;
 import com.example.start_spring.services.ComicService;
 import lombok.AccessLevel;
@@ -28,6 +30,7 @@ public class ComicServiceImpl implements ComicService {
     ComicRepo comicRepo;
     GenresRepo genresRepo;
     AuthorRepo authorRepo;
+    FavoritesRepo favoritesRepo;
 
     @Override
     public List<Comic> getAll() {
@@ -59,6 +62,7 @@ public class ComicServiceImpl implements ComicService {
         entity.setTitle(request.getTitle());
         entity.setDescription(request.getDescription());
         entity.setCoverImage(request.getCoverImage());
+        entity.setStatus(request.getStatus());
         if (!CollectionUtils.isEmpty(request.getGenres())) {
             entity.setGenres(request.getGenres());
         }
@@ -113,8 +117,29 @@ public class ComicServiceImpl implements ComicService {
             if (Objects.isNull(comic)) {
                 return new ResponseEntity<>("Comic không tồn tại", HttpStatus.BAD_REQUEST);
             }
+            Comic entity = comic.get();
 
-            return new ResponseEntity<>(comic, HttpStatus.OK);
+            entity.setViewCount(Objects.isNull(entity.getViewCount()) ? 0 : entity.getViewCount() +1);
+
+            comicRepo.save(entity);
+
+            Integer numFollow = favoritesRepo.countByComicId(id);
+
+            GetComicDto dto = new GetComicDto();
+            dto.setId(comic.get().getId());
+            dto.setTitle(comic.get().getTitle());
+            dto.setDescription(comic.get().getDescription());
+            dto.setAuthor(comic.get().getAuthor());
+            dto.setCoverImage(comic.get().getCoverImage());
+            dto.setGenres(comic.get().getGenres());
+            dto.setChapters(comic.get().getChapters());
+            dto.setLikeCount(comic.get().getLikeCount());
+            dto.setViewCount(comic.get().getViewCount());
+            dto.setCreatedAt(comic.get().getCreatedAt());
+            dto.setStatus(comic.get().getStatus());
+            dto.setNumFollow(numFollow);
+
+            return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -141,12 +166,12 @@ public class ComicServiceImpl implements ComicService {
     @Override
     public ResponseEntity<Object> like(String id) {
         Optional<Comic> isExits = comicRepo.findById(id);
-        if(Objects.isNull(isExits)) {
+        if (Objects.isNull(isExits)) {
             return new ResponseEntity<>("Không tìm thấy", HttpStatus.NOT_FOUND);
         }
         Comic entity = isExits.get();
 
-        entity.setLikeCount(entity.getLikeCount() + 1);
+        entity.setLikeCount(Objects.isNull(entity.getLikeCount()) ? 1 : entity.getLikeCount() + 1);
         comicRepo.save(entity);
 
         return new ResponseEntity<>("Thành công", HttpStatus.OK);

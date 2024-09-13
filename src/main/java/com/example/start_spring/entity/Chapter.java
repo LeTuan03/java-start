@@ -31,5 +31,6 @@ public class Chapter {
     String comicId;
 
     @OneToMany(mappedBy = "chapterId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdAt DESC")
     Set<Page> pages;
 }

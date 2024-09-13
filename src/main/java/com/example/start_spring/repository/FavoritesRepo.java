@@ -16,4 +16,7 @@ public interface FavoritesRepo extends JpaRepository<Favorites, String> {
     List<FavoriteDto> findByUserId(String userId);
 
     boolean existsByUserIdAndComicId(String userId, String comicId);
+
+    @Query("SELECT COUNT(f) FROM Favorites f WHERE f.comic.id = :comicId")
+    Integer countByComicId(String comicId);
 }

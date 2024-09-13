@@ -1,6 +1,7 @@
 package com.example.start_spring.services.Impl;
 
 import com.example.start_spring.DTO.ApiResponse;
+import com.example.start_spring.DTO.RateComicDto;
 import com.example.start_spring.entity.Account;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.RateComic;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,10 +53,8 @@ public class RateComicServiceImpl implements RateComicService {
 
     @Override
     public ApiResponse<Object> getAll() {
-        ApiResponse<Object> apiResponse = new ApiResponse();
-        apiResponse.setCode(CodeEnum.RESPONSE_OK.getCode());
-        apiResponse.setMessage(CodeEnum.RESPONSE_OK.getMessage());
-        apiResponse.setData(rateComicRepo.findAllReq());
+        List<RateComicDto> data = rateComicRepo.findAllReq();
+        ApiResponse<Object> apiResponse = new ApiResponse<>(data);
         return apiResponse;
     }
 }

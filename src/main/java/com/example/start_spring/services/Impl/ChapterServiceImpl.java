@@ -40,6 +40,7 @@ public class ChapterServiceImpl implements ChapterService {
             Comic comic = comicRepo.findById(chapter.getComicId())
                     .orElseThrow(() -> new RuntimeException("Comic not found"));
 
+            chapter.setCreatedAt(LocalDateTime.now());
 
             Chapter entity = this.getChapterById(chapter);
 
@@ -95,11 +96,11 @@ public class ChapterServiceImpl implements ChapterService {
         entity.setChapterNumber(request.getChapterNumber());
         entity.setComicId(request.getComicId());
 
-        Date date = new Date();
-        LocalDateTime localDateTime = date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        entity.setCreatedAt(localDateTime);
+//        Date date = new Date();
+//        LocalDateTime localDateTime = date.toInstant()
+//                .atZone(ZoneId.systemDefault())
+//                .toLocalDateTime();
+//        entity.setCreatedAt(localDateTime);
     }
 
     Chapter getChapterById(ChapterRequest req) throws Exception {
@@ -138,6 +139,7 @@ public class ChapterServiceImpl implements ChapterService {
                     page.setPageNumber(pageDto.getPageNumber());
                     page.setImageUrl(pageDto.getImageUrl());
                     page.setChapterId(chapter.getId());
+                    page.setCreatedAt(pageDto.getCreatedAt());
                 }
             } else {
                 // Nếu ID là null, tạo mới
@@ -145,6 +147,7 @@ public class ChapterServiceImpl implements ChapterService {
                 page.setPageNumber(pageDto.getPageNumber());
                 page.setImageUrl(pageDto.getImageUrl());
                 page.setChapterId(chapter.getId());
+                page.setCreatedAt(chapter.getCreatedAt());
             }
 
             // Thêm page vào danh sách

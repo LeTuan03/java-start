@@ -28,4 +28,5 @@ public class GetComicDto {
     LocalDate createdAt;
     Integer numFollow;
     Integer status;
+    Double averageRate;
 }

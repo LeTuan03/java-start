@@ -11,7 +11,7 @@ public class GlobalException {
     ResponseEntity<ApiResponse> handleExceptionGlobal(RuntimeException exception) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(ErrorCode.SERVER_ERROR.getCode());
-        apiResponse.setMessage(ErrorCode.SERVER_ERROR.getMessage());
+        apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 

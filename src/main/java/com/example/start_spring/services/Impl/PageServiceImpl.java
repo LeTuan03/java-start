@@ -118,6 +118,7 @@ public class PageServiceImpl implements PageService {
             }
             page.setPageNumber(pageDto.getPageNumber());
             page.setImageUrl(pageDto.getImageUrl());
+            page.setCreatedAt(pageDto.getCreatedAt());
             page.setChapterId(chapterId);
             pages.add(page);
         }
@@ -158,5 +159,10 @@ public class PageServiceImpl implements PageService {
             return new ResponseEntity<>(cloudinaryService.uploadImage(imageUrl), HttpStatus.OK);
         }
         return new ResponseEntity<>("Server error", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Object> createImageMulti(List<MultipartFile> imageUrl) throws IOException {
+        return null;
     }
 }

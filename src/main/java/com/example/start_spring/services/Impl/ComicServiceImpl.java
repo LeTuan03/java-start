@@ -3,13 +3,11 @@ package com.example.start_spring.services.Impl;
 import com.example.start_spring.DTO.ComicDto;
 import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.DTO.GetComicDto;
+import com.example.start_spring.DTO.RateComicDto;
 import com.example.start_spring.entity.Author;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
-import com.example.start_spring.repository.AuthorRepo;
-import com.example.start_spring.repository.ComicRepo;
-import com.example.start_spring.repository.FavoritesRepo;
-import com.example.start_spring.repository.GenresRepo;
+import com.example.start_spring.repository.*;
 import com.example.start_spring.services.ComicService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +29,7 @@ public class ComicServiceImpl implements ComicService {
     GenresRepo genresRepo;
     AuthorRepo authorRepo;
     FavoritesRepo favoritesRepo;
+    RateComicRepo rateComicRepo;
 
     @Override
     public List<Comic> getAll() {
@@ -109,6 +108,12 @@ public class ComicServiceImpl implements ComicService {
         }
     }
 
+    private Double getAverageRate(String comicId) {
+        List<RateComicDto> allRate = rateComicRepo.findAllByComicId(comicId);
+        int totalRate = allRate.stream().mapToInt(RateComicDto::getStar).sum();
+        return totalRate / 5.0;
+    }
+
     @Override
     public ResponseEntity<Object> getById(String id) {
         try {
@@ -119,11 +124,12 @@ public class ComicServiceImpl implements ComicService {
             }
             Comic entity = comic.get();
 
-            entity.setViewCount(Objects.isNull(entity.getViewCount()) ? 0 : entity.getViewCount() +1);
+            entity.setViewCount(Objects.isNull(entity.getViewCount()) ? 0 : entity.getViewCount() + 1);
 
             comicRepo.save(entity);
 
             Integer numFollow = favoritesRepo.countByComicId(id);
+
 
             GetComicDto dto = new GetComicDto();
             dto.setId(comic.get().getId());
@@ -138,6 +144,7 @@ public class ComicServiceImpl implements ComicService {
             dto.setCreatedAt(comic.get().getCreatedAt());
             dto.setStatus(comic.get().getStatus());
             dto.setNumFollow(numFollow);
+            dto.setAverageRate(this.getAverageRate(comic.get().getId()));
 
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (Exception ex) {

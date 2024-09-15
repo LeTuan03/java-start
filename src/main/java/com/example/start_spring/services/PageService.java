@@ -24,4 +24,6 @@ public interface PageService {
     ResponseEntity<Object> updateImage(String id, MultipartFile imageUrl) throws IOException;
 
     ResponseEntity<Object> createImage(MultipartFile imageUrl) throws IOException;
+
+    ResponseEntity<Object> createImageMulti(List<MultipartFile> imageUrl) throws IOException;
 }

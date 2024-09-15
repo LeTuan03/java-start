@@ -29,8 +29,17 @@ public class RateComicServiceImpl implements RateComicService {
     AccountRepo accountRepo;
     ComicRepo comicRepo;
 
+    private boolean validateCreate(String userId, String comicId) {
+        return rateComicRepo.existsByUserIdAndComicId(userId, comicId);
+    }
+
     @Override
     public ApiResponse<RateComic> create(String userId, String comicId, Integer star) {
+
+        if(this.validateCreate(userId, comicId)) {
+            throw new AppException(ErrorCode.EXITS_COMIC_FAV);
+        }
+
         ApiResponse<RateComic> apiResponse = new ApiResponse();
         RateComic entity = new RateComic();
         Optional<Account> account = accountRepo.findById(userId);

@@ -21,4 +21,5 @@ public class AccountRequestDto {
     Author author;
     Boolean isAllowRegister;
     String fullName;
+    String address;
 }

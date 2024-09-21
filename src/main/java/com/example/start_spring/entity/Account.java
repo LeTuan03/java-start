@@ -43,6 +43,9 @@ public class Account {
     @Column(name = "createdAt")
     LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "address")
+    String address;
+
     @Column(name = "role")
     String role = RoleEnum.USER.name();
 

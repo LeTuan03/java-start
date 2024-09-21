@@ -47,6 +47,7 @@ public class AccountServiceImpl implements AccountService {
         entity.setPassword(isUpdate ? entity.getPassword() : accountRequestDto.getPassword());
         entity.setFullName(accountRequestDto.getFullName());
         entity.setIsAllowRegister(accountRequestDto.getIsAllowRegister());
+        entity.setAddress(accountRequestDto.getAddress());
 
         if (!Objects.isNull(accountRequestDto.getAuthor())) {
             entity.setAuthor(accountRequestDto.getAuthor());
@@ -248,6 +249,7 @@ public class AccountServiceImpl implements AccountService {
         response.setIsActive(true);
         response.setFullName(account.getFullName());
         response.setIsAllowRegister(account.getIsAllowRegister());
+        response.setAddress(account.getAddress());
         return response;
     }
 }

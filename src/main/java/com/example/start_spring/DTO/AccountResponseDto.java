@@ -21,6 +21,7 @@ public class AccountResponseDto {
     Author author;
     String fullName;
     Boolean isAllowRegister;
+    String address;
 
     public AccountResponseDto(Account account) {
         this.id = account.getId();
@@ -33,5 +34,6 @@ public class AccountResponseDto {
         this.author = account.getAuthor();
         this.isAllowRegister = account.getIsAllowRegister();
         this.fullName = account.getFullName();
+        this.address = account.getAddress();
     }
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -29,4 +30,5 @@ public class GetComicDto {
     Integer numFollow;
     Integer status;
     Double averageRate;
+    LocalDateTime updatedAt;
 }

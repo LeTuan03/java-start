@@ -16,4 +16,7 @@ public interface RateComicRepo extends JpaRepository<RateComic, String> {
     @Query("SELECT new com.example.start_spring.DTO.RateComicDto(f) FROM RateComic f where f.comic.id = :comicId")
     List<RateComicDto> findAllByComicId(String comicId);
 
+    @Query("SELECT r FROM RateComic r ORDER BY r.star DESC")
+    List<RateComic> findTop10ByStar();
+
 }

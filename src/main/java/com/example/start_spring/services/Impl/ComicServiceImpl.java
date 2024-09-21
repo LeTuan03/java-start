@@ -1,9 +1,6 @@
 package com.example.start_spring.services.Impl;
 
-import com.example.start_spring.DTO.ComicDto;
-import com.example.start_spring.DTO.ComicListByUser;
-import com.example.start_spring.DTO.GetComicDto;
-import com.example.start_spring.DTO.RateComicDto;
+import com.example.start_spring.DTO.*;
 import com.example.start_spring.entity.Author;
 import com.example.start_spring.entity.Comic;
 import com.example.start_spring.entity.Genres;
@@ -17,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,6 +60,7 @@ public class ComicServiceImpl implements ComicService {
         entity.setDescription(request.getDescription());
         entity.setCoverImage(request.getCoverImage());
         entity.setStatus(request.getStatus());
+        entity.setUpdatedAt(LocalDateTime.now());
         if (!CollectionUtils.isEmpty(request.getGenres())) {
             entity.setGenres(request.getGenres());
         }
@@ -142,6 +141,7 @@ public class ComicServiceImpl implements ComicService {
             dto.setLikeCount(comic.get().getLikeCount());
             dto.setViewCount(comic.get().getViewCount());
             dto.setCreatedAt(comic.get().getCreatedAt());
+            dto.setUpdatedAt(comic.get().getUpdatedAt());
             dto.setStatus(comic.get().getStatus());
             dto.setNumFollow(numFollow);
             dto.setAverageRate(this.getAverageRate(comic.get().getId()));
@@ -166,7 +166,7 @@ public class ComicServiceImpl implements ComicService {
     @Override
     public List<ComicListByUser> getAllByUser() {
         return comicRepo.findAll().stream()
-                .map(comic -> new ComicListByUser(comic.getId(), comic.getTitle(), comic.getCoverImage()))
+                .map(comic -> new ComicListByUser(comic.getId(), comic.getTitle(), comic.getCoverImage(), comic.getUpdatedAt()))
                 .collect(Collectors.toList());
     }
 
@@ -182,5 +182,11 @@ public class ComicServiceImpl implements ComicService {
         comicRepo.save(entity);
 
         return new ResponseEntity<>("Thành công", HttpStatus.OK);
+    }
+
+    @Override
+    public ApiResponse<List<ComicListByUser>> getListComicOrderByUpdatedAt() {
+        ApiResponse<List<ComicListByUser>> apiResponse = new ApiResponse<>(comicRepo.getListComicOrderByUpdatedAt());
+        return apiResponse;
     }
 }

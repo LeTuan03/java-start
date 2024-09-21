@@ -66,4 +66,10 @@ public class RateComicServiceImpl implements RateComicService {
         ApiResponse<Object> apiResponse = new ApiResponse<>(data);
         return apiResponse;
     }
+
+    @Override
+    public ApiResponse<List<RateComic>> getTop10HighComicRate() {
+        ApiResponse<List<RateComic>> apiResponse = new ApiResponse<>(rateComicRepo.findTop10ByStar());
+        return apiResponse;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.start_spring.services;
 
+import com.example.start_spring.DTO.ApiResponse;
 import com.example.start_spring.DTO.ComicDto;
 import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.entity.Comic;
@@ -22,4 +23,6 @@ public interface ComicService {
     List<ComicListByUser> getAllByUser();
 
     ResponseEntity<Object> like(String id);
+
+    ApiResponse<List<ComicListByUser>> getListComicOrderByUpdatedAt();
 }

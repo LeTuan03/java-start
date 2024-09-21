@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,4 +28,5 @@ public class ComicDto {
     Set<Genres> genres;
     Set<Chapter> chapters;
     Integer status;
+    LocalDateTime updatedAt;
 }

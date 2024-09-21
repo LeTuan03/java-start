@@ -1,5 +1,6 @@
 package com.example.start_spring.controller;
 
+import com.example.start_spring.DTO.ApiResponse;
 import com.example.start_spring.DTO.ComicDto;
 import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.entity.Comic;
@@ -52,4 +53,7 @@ public class ComicController {
     ResponseEntity<Object> like(@PathVariable String id) {
         return comicService.like(id);
     }
+
+    @GetMapping("/order-by")
+    ApiResponse<List<ComicListByUser>> getListComicOrderByUpdatedAt() {return comicService.getListComicOrderByUpdatedAt();};
 }

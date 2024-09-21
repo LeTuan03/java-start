@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -33,6 +34,9 @@ public class Comic {
 
     @Column(name = "createdAt")
     LocalDate createdAt = LocalDate.now();
+
+    @Column(name = "updatedAt")
+    LocalDateTime updatedAt = LocalDateTime .now();
 
     @Column(name = "likeCount")
     Integer likeCount;

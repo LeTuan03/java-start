@@ -22,4 +22,5 @@ public class AccountRequestDto {
     Boolean isAllowRegister;
     String fullName;
     String address;
+    String coverImage;
 }

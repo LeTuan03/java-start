@@ -47,6 +47,9 @@ public class Comic {
     @Column(name = "status")
     Integer status;
 
+    @Column(name = "newestChapterNumber")
+    Integer newestChapterNumber;
+
     @ManyToOne
     @JoinColumn(name = "authorId")
     Author author;

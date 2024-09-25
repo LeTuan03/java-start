@@ -23,6 +23,8 @@ public class AccountResponseDto {
     Boolean isAllowRegister;
     String address;
 
+    String coverImage;
+
     public AccountResponseDto(Account account) {
         this.id = account.getId();
         this.username = account.getUsername();
@@ -35,5 +37,6 @@ public class AccountResponseDto {
         this.isAllowRegister = account.getIsAllowRegister();
         this.fullName = account.getFullName();
         this.address = account.getAddress();
+        this.coverImage = account.getCoverImage();
     }
 }

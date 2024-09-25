@@ -61,6 +61,7 @@ public class ComicServiceImpl implements ComicService {
         entity.setCoverImage(request.getCoverImage());
         entity.setStatus(request.getStatus());
         entity.setUpdatedAt(LocalDateTime.now());
+        entity.setNewestChapterNumber(request.getNewestChapterNumber());
         if (!CollectionUtils.isEmpty(request.getGenres())) {
             entity.setGenres(request.getGenres());
         }
@@ -143,6 +144,7 @@ public class ComicServiceImpl implements ComicService {
             dto.setCreatedAt(comic.get().getCreatedAt());
             dto.setUpdatedAt(comic.get().getUpdatedAt());
             dto.setStatus(comic.get().getStatus());
+            dto.setNewestChapterNumber(comic.get().getNewestChapterNumber());
             dto.setNumFollow(numFollow);
             dto.setAverageRate(this.getAverageRate(comic.get().getId()));
 
@@ -166,7 +168,7 @@ public class ComicServiceImpl implements ComicService {
     @Override
     public List<ComicListByUser> getAllByUser() {
         return comicRepo.findAll().stream()
-                .map(comic -> new ComicListByUser(comic.getId(), comic.getTitle(), comic.getCoverImage(), comic.getUpdatedAt()))
+                .map(comic -> new ComicListByUser(comic.getId(), comic.getTitle(), comic.getCoverImage(), comic.getUpdatedAt(), comic.getAuthor().getName(), comic.getNewestChapterNumber()))
                 .collect(Collectors.toList());
     }
 

@@ -31,4 +31,5 @@ public class GetComicDto {
     Integer status;
     Double averageRate;
     LocalDateTime updatedAt;
+    Integer newestChapterNumber;
 }

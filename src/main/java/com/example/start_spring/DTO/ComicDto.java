@@ -28,5 +28,6 @@ public class ComicDto {
     Set<Genres> genres;
     Set<Chapter> chapters;
     Integer status;
+    Integer newestChapterNumber;
     LocalDateTime updatedAt;
 }

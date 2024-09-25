@@ -48,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
         entity.setFullName(accountRequestDto.getFullName());
         entity.setIsAllowRegister(accountRequestDto.getIsAllowRegister());
         entity.setAddress(accountRequestDto.getAddress());
-
+        entity.setCoverImage(accountRequestDto.getCoverImage());
         if (!Objects.isNull(accountRequestDto.getAuthor())) {
             entity.setAuthor(accountRequestDto.getAuthor());
         } else {
@@ -250,6 +250,7 @@ public class AccountServiceImpl implements AccountService {
         response.setFullName(account.getFullName());
         response.setIsAllowRegister(account.getIsAllowRegister());
         response.setAddress(account.getAddress());
+        response.setCoverImage(account.getCoverImage());
         return response;
     }
 }

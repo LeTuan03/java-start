@@ -37,6 +37,9 @@ public class Account {
     @Column(name = "avatar")
     String avatar;
 
+    @Column(name = "coverImage")
+    String coverImage;
+
     @Column(name = "fullName")
     String fullName;
 

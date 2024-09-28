@@ -1,6 +1,7 @@
 package com.example.start_spring.services.Impl;
 
 import com.example.start_spring.DTO.ApiResponse;
+import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.DTO.RateComicDto;
 import com.example.start_spring.entity.Account;
 import com.example.start_spring.entity.Comic;
@@ -68,8 +69,8 @@ public class RateComicServiceImpl implements RateComicService {
     }
 
     @Override
-    public ApiResponse<List<RateComic>> getTop10HighComicRate() {
-        ApiResponse<List<RateComic>> apiResponse = new ApiResponse<>(rateComicRepo.findTop10ByStar());
+    public ApiResponse<List<ComicListByUser>> getTop10HighComicRate() {
+        ApiResponse<List<ComicListByUser>> apiResponse = new ApiResponse<>(rateComicRepo.findTop10ByStar());
         return apiResponse;
     }
 }

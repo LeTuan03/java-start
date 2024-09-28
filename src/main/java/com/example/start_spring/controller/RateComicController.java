@@ -1,6 +1,7 @@
 package com.example.start_spring.controller;
 
 import com.example.start_spring.DTO.ApiResponse;
+import com.example.start_spring.DTO.ComicListByUser;
 import com.example.start_spring.entity.RateComic;
 import com.example.start_spring.services.RateComicService;
 import lombok.AccessLevel;
@@ -28,7 +29,7 @@ public class RateComicController {
     }
 
     @GetMapping("/top")
-    ApiResponse<List<RateComic>> getTop10HighComicRate() {
+    ApiResponse<List<ComicListByUser>> getTop10HighComicRate() {
         return rateComicService.getTop10HighComicRate();
     }
 }

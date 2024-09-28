@@ -19,10 +19,24 @@ public class ComicListByUser {
         this.newestChapterNumber = newestChapterNumber;
     }
 
+
+
     String id;
     String title;
     String coverImage;
     LocalDateTime updatedAt;
     String authorName;
     Integer newestChapterNumber;
+
+    Long totalStar;
+
+    public ComicListByUser(String id, String title, String coverImage, LocalDateTime updatedAt, String authorName, Integer newestChapterNumber, Long totalStar) {
+        this.id = id;
+        this.title = title;
+        this.coverImage = coverImage;
+        this.updatedAt = updatedAt;
+        this.authorName = authorName;
+        this.newestChapterNumber = newestChapterNumber;
+        this.totalStar = totalStar;
+    }
 }

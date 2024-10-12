@@ -63,7 +63,21 @@ public class ComicServiceImpl implements ComicService {
         entity.setUpdatedAt(LocalDateTime.now());
         entity.setNewestChapterNumber(request.getNewestChapterNumber());
         if (!CollectionUtils.isEmpty(request.getGenres())) {
-            entity.setGenres(request.getGenres());
+            Set<Genres> genresSet = new HashSet<>();
+
+            for (Genres genre : request.getGenres()) {
+                Optional<Genres> existingGenre = genresRepo.findById(genre.getId());
+
+                if (existingGenre.isPresent()) {
+                    genresSet.add(existingGenre.get());
+                } else {
+                    genresSet.add(genre);
+                }
+            }
+
+            entity.setGenres(genresSet);
+        } else {
+            entity.setGenres(null);
         }
 //        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
 //            entity.setChapters(request.getChapters());
